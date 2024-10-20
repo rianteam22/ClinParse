@@ -28,7 +28,7 @@ Ensure you have Python 3.7 or higher installed. Then, follow these steps:
    git clone <repository_url>
    cd <repository_name>
    ```
-2
+   
 2. **Set up a virtual environment:**
    ```bash
    python3 -m pip install --user virtualenv
