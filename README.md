@@ -1,3 +1,4 @@
+**Only works on Linux distros**
 
 # Medical Information Extraction System
 
@@ -27,10 +28,12 @@ Ensure you have Python 3.7 or higher installed. Then, follow these steps:
    git clone <repository_url>
    cd <repository_name>
    ```
-
+2
 2. **Set up a virtual environment:**
    ```bash
-   python -m venv venv
+   python3 -m pip install --user virtualenv
+   python3 -m virtualenv --help
+   virtualenv venv
    source venv/bin/activate  # On Windows use: venv\Scripts\activate
    ```
 
@@ -126,6 +129,8 @@ Contributions are welcome! To contribute:
    git push origin feature/my-feature
    ```
 5. **Submit a pull request.**
+   
+
 
 ## License
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
