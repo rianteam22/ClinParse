@@ -63,7 +63,6 @@ The application has the following directory structure:
 
 ```
 .
-├── assets/
 ├── logs/
 ├── scans/
 │   ├── csv/
@@ -81,9 +80,6 @@ The application has the following directory structure:
 ├── LICENSE
 ├── README.md
 ├── requirements.txt
-├── response.json
-├── sample.env
-└── test_data.csv
 ```
 
 ### Key Directories
