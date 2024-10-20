@@ -83,7 +83,6 @@ The application has the following directory structure:
 ```
 
 ### Key Directories
-- **assets/**: Stores static assets (e.g., images, reference documents).
 - **logs/**: Stores log files for debugging and monitoring.
 - **scans/**: Contains input and output data directories.
   - **csv/**: Contains CSV files generated from JSON data.
