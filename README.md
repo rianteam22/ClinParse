@@ -34,7 +34,7 @@ Ensure you have Python 3.7 or higher installed. Then, follow these steps:
    python3 -m pip install --user virtualenv
    python3 -m virtualenv --help
    virtualenv venv
-   source venv/bin/activate  # On Windows use: venv\Scripts\activate
+   source venv/bin/activate  
    ```
 
 3. **Install dependencies:**
