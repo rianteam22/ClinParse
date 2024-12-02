@@ -28,6 +28,8 @@ openai==1.51.0
 orjson==3.10.7
 packaging==24.1
 pandas==2.2.3
+pdf2image==1.17.0
+pillow==11.0.0
 pydantic==2.7.4
 pydantic_core==2.18.4
 python-dateutil==2.9.0.post0

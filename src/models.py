@@ -4,25 +4,25 @@ from datetime import datetime
 
 class Identificacao(BaseModel):
     nome: str = Field(description="Nome completo da paciente")
-    registro: str = Field(description="Número de registro da paciente")
+    registro: str = Field(description="Registro: ")
     local: str = Field(description="Local (IMIP, ISEA, MDER)")
-    data_nascimento: datetime = Field(description="Data de nascimento da paciente")
+    data_nascimento: datetime = Field(description="Data de nascimento da paciente(ano-mes-dia)")
     endereco: str = Field(description="Endereço completo")
-    telefone1: str = Field(description="Primeiro número de telefone da paciente")
+    telefone1: str = Field(description="Primeiro número de telefone da paciente(null caso vazio)")
     telefone2: str = Field(description="Segundo número de telefone da paciente(caso haja)")
-    data_admissao: datetime = Field(description="Data de admissão no hospital")
+    data_admissao: datetime = Field(description="Data de admissão no hospital(ano-mes-dia)")
 
 class DadosGerais(BaseModel):
-    idade: int = Field(description="Idade da paciente em anos")
+    idade: int = Field(description="Idade da paciente em anos(calcule com base na ideade de nascimento caso necessário)")
     gesta: int = Field(description="Número de gestações")
     para: int = Field(description="Número de partos")
     aborto: int = Field(description="Número de abortos")
     cor_autorreferida: str = Field(description="Cor autorreferida da paciente")
-    escolaridade: str = Field(description="Escolaridade da paciente")
-    ocupacao_descritiva: str = Field(description="Ocupação descritiva da paciente")
-    ocupacao_categorizada: str = Field(description="Ocupação categorizada da paciente(publico/privado/dona de casa/autônoma/desempregada)")
-    renda_familiar_descritiva: float = Field(description="Renda familiar descritiva da paciente")
-    renda_familiar_categorizada: str = Field(description="Renda familiar da paciente (<meio SM/ meio a 1 SM/ >1 a 5 SM/ >5 a 10 SM/ >10 SM)")
+    escolaridade: str = Field(description="Escolaridade da paciente( Analf., 1-3 a, 4-7 a, 8-11 a, > 12 a)")
+    ocupacao_descritiva: str = Field(description="Ocupação descritiva da paciente(null caso vazio)")
+    ocupacao_categorizada: str = Field(description="Ocupação categorizada da paciente(null caso vazio)(publico/privado/dona de casa/autônoma/desempregada)")
+    renda_familiar_descritiva: float = Field(description="Renda familiar descritiva da paciente(null caso vazio)")
+    renda_familiar_categorizada: str = Field(description="Renda familiar da paciente (null caso vazio)(<meio SM/ meio a 1 SM/ >1 a 5 SM/ >5 a 10 SM/ >10 SM)")
     peso: float = Field(description="Peso da paciente em kg")
     estatura: float = Field(description="Altura da paciente em cm")
     imc: float = Field(description="Índice de massa corporal")
@@ -30,7 +30,7 @@ class DadosGerais(BaseModel):
     cidade_origem: str = Field(description="Cidade de origem da paciente(Recife e região metropolitana, Teresina e região metropolitana, Campina Grande e região metropolitana, Interior do Pernambuco, Interior do Piauí, Interior da Paraíba, Outros Estados)")
 
 class Comorbidades(BaseModel):
-    comorbidades: bool = Field(description="Presença de comorbidades")
+    comorbidades: bool = Field(description="(SIM-True caso haja alguma comorbidade /NÃO-False caso todas as comorbidades abaixo sejam negativas)")
     has: bool = Field(description="Presença de hipertensão arterial")
     dm: bool = Field(description="Presença de diabetes mellitus")
     doenca_renal_cronica: bool = Field(description="Presença de doença renal crônica")
@@ -71,7 +71,7 @@ class DadosInfeccao(BaseModel):
     estagio_infeccao_admissao: str = Field(description="Estágio da infecção no momento da admissão (sem infecção, infecção sem sepse, sepse, choque séptico)")
     estagio_gravidez_diagnostico_infeccao: str = Field(description="Estágio da gravidez no momento do diagnóstico da infecção (grávida, parturiente, puérpera, pós-aborto)")
     tipo_infeccao: str = Field(description="Tipo de infecção (obstétrica, nÃO obstétrica, mista)")
-    descricao_infeccao: Optional[str] = Field(description="Descrição da infecção", default="")
+    descricao_infeccao: str = Field(description="Quais as infecções?", default="")
     
     foco_infeccao: str = Field(description="Foco da infecção (respiratório, urinário, abdominal, uterino, sítio cirúrgico, outros)")
     descricao_foco_outros: Optional[str] = Field(description="Descrição do foco da infecção se 'Outros'", default="")
@@ -84,7 +84,7 @@ class DadosInfeccao(BaseModel):
 
 class ParametrosClinicos(BaseModel):
     # Parâmetros para Infecção
-    classificacao_infeccao: str = Field(description="Classificação da infecção")
+    classificacao_infeccao: str = Field(description="(all infection data is on left side of the table)Classificação da infecção")
     tax_infeccao: Optional[float] = Field(description="Temperatura axilar (TAX) - Infecção", default="null")
     fc_infeccao: Optional[int] = Field(description="Frequência cardíaca (FC) - Infecção", default="null")
     fr_infeccao: Optional[int] = Field(description="Frequência respiratória (FR) - Infecção", default="null")
@@ -113,9 +113,14 @@ class ParametrosClinicos(BaseModel):
     plaquetas_infeccao: Optional[int] = Field(description="Contagem de plaquetas - Infecção", default="null")
     desvio_esquerda_infeccao: bool = Field(description="Desvio à esquerda - Infecção")
     lactato_infeccao: Optional[float] = Field(description="Lactato - Infecção", default="null")
+    ph_infeccao: Optional[float] = Field(description="pH - Infecção", default="null")
+    pco2_infeccao: Optional[float] = Field(description="pCO₂ - Infecção", default="null")
+    hco3_infeccao: Optional[float] = Field(description="HCO₃ - Infecção", default="null")
+    pao2_infeccao: Optional[float] = Field(description="PaO₂ - Infecção", default="null")
+    fio2_infeccao: Optional[float] = Field(description="FiO₂ - Infecção", default="null")
 
     # Parâmetros para Sepse
-    classificacao_sepse: str = Field(description="Classificação da sepse")
+    classificacao_sepse: str = Field(description="(all sepse parameters are on right sid of the table) Classificação da sepse")
     tax_sepse: Optional[float] = Field(description="Temperatura axilar (TAX) - Sepse", default="null")
     fc_sepse: Optional[int] = Field(description="Frequência cardíaca (FC) - Sepse", default="null")
     fr_sepse: Optional[int] = Field(description="Frequência respiratória (FR) - Sepse", default="null")
@@ -144,7 +149,12 @@ class ParametrosClinicos(BaseModel):
     plaquetas_sepse: Optional[int] = Field(description="Contagem de plaquetas - Sepse", default=0)
     desvio_esquerda_sepse: bool = Field(description="Desvio à esquerda - Sepse")
     lactato_sepse: Optional[float] = Field(description="Lactato - Sepse", default=None)
-    
+    ph_sepse: Optional[float] = Field(description="pH - Sepse", default=None)
+    pco2_sepse: Optional[float] = Field(description="pCO₂ - Sepse", default=None)
+    hco3_sepse: Optional[float] = Field(description="HCO₃ - Sepse", default=None)
+    pao2_sepse: Optional[float] = Field(description="PaO₂ - Sepse", default=None)
+    fio2_sepse: Optional[float] = Field(description="FiO₂ - Sepse", default=None)
+
     # Outros parâmetros - Infecção e Sepse
     oliguria_infeccao: bool = Field(description="Oligúria - Infecção")
     oxigenoterapia_infeccao: bool = Field(description="Oxigenoterapia - Infecção")
@@ -182,7 +192,7 @@ class ComplicacoesClinicas(BaseModel):
 class DesfechosNeonatais(BaseModel):
     # Desfechos neonatais adversos (SIM/NÃO)
     desfechos_neonatais_adversos: bool = Field(description="Desfechos neonatais adversos (SIM/NÃO)")
-    
+    descricao_desfechos_neonatais: Optional[str] = Field(description="Descrição dos desfechos neonatais", default="null")
     # Detalhes dos desfechos
     obito_fetal_intrautero: bool = Field(description="Óbito fetal intraútero (SIM/NÃO)")
     obito_neonatal: bool = Field(description="Óbito neonatal (SIM/NÃO)")

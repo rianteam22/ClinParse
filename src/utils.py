@@ -1,5 +1,7 @@
 import json
+from pdf2image import convert_from_path
 import logging
+from PIL import Image, ImageEnhance, ImageFilter
 from pathlib import Path
 from unstract.llmwhisperer.client import LLMWhispererClient, LLMWhispererClientException
 import pandas as pd
@@ -31,6 +33,44 @@ def extract_text_from_pdf(file_path, pages_list=None):
     except Exception as e:
         logging.exception(f"Unexpected error extracting text from PDF {file_path}: {e}")
         raise RuntimeError(f"Unexpected error extracting text from PDF {file_path}: {e}")
+    
+def converter_pdf_para_png_com_preprocessamento(pdf_path, output_dir):
+    """
+    Converte cada página de um PDF em imagens PNG, aplica pré-processamento para melhorar a qualidade do OCR
+    e salva as imagens em um diretório específico.
+
+    :param pdf_path: Caminho para o arquivo PDF.
+    :param output_dir: Diretório onde as imagens PNG serão salvas.
+    """
+    try:
+        # Converte o PDF em uma lista de imagens
+        paginas = convert_from_path(pdf_path, dpi=400)
+        
+        # Cria o diretório de saída se não existir
+        output_dir.mkdir(parents=True, exist_ok=True)
+        
+        for i, pagina in enumerate(paginas):
+            # Converte para escala de cinza
+            imagem = pagina.convert('L')
+            
+            # Aumenta o contraste
+            enhancer = ImageEnhance.Sharpness(imagem)
+            imagem = enhancer.enhance(1.0)  # Ajuste o fator conforme necessário
+            
+            # Aplica filtro de nitidez
+            imagem = imagem.filter(ImageFilter.DETAIL)
+            
+            # Binariza a imagem
+            imagem = imagem.point(lambda x: 0 if x < 128 else 255, '1')
+            
+            # Salva a imagem processada como PNG
+            imagem_path = output_dir / f"pagina_{i + 1}.png"
+            imagem.save(imagem_path, 'PNG')
+            logging.info(f"Página {i + 1} salva como {imagem_path}")
+    
+    except Exception as e:
+        logging.error(f"Erro ao converter {pdf_path} para imagens PNG: {e}")
+
 
 def json_to_csv(json_file_path, csv_file_path):
     """
