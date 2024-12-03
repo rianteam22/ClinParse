@@ -21,7 +21,7 @@ langchain-core==0.2.41
 langchain-openai==0.1.11
 langchain-text-splitters==0.2.4
 langsmith==0.1.131
-llmwhisperer-client==0.2.0
+llmwhisperer-client==2.0.0
 multidict==6.1.0
 numpy==1.26.4
 openai==1.51.0

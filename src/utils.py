@@ -1,10 +1,11 @@
 import json
-from pdf2image import convert_from_path
 import logging
+from pdf2image import convert_from_path
 from PIL import Image, ImageEnhance, ImageFilter
 from pathlib import Path
-from unstract.llmwhisperer.client import LLMWhispererClient, LLMWhispererClientException
 import pandas as pd
+from unstract.llmwhisperer.client_v2 import LLMWhispererClientException
+from unstract.llmwhisperer import LLMWhispererClientV2
 
 def save_extracted_text(text, file_path):
     with open(file_path, 'w', encoding='utf-8') as f:
@@ -21,10 +22,15 @@ def create_directories(paths):
         path.mkdir(parents=True, exist_ok=True)
 
 def extract_text_from_pdf(file_path, pages_list=None):
-    llmw = LLMWhispererClient()
+    llmw = LLMWhispererClientV2()
     try:
-        result = llmw.whisper(file_path=file_path, pages_to_extract=pages_list)
-        extracted_text = result["extracted_text"]
+        result = llmw.whisper(
+            wait_for_completion=True,
+            wait_timeout=200,
+            file_path=file_path, 
+            pages_to_extract=pages_list
+        )
+        extracted_text = result["extraction"]["result_text"]
         logging.info(f"Extracted text from PDF: {file_path}")
         return extracted_text
     except LLMWhispererClientException as e:
@@ -33,7 +39,7 @@ def extract_text_from_pdf(file_path, pages_list=None):
     except Exception as e:
         logging.exception(f"Unexpected error extracting text from PDF {file_path}: {e}")
         raise RuntimeError(f"Unexpected error extracting text from PDF {file_path}: {e}")
-    
+
 def converter_pdf_para_png_com_preprocessamento(pdf_path, output_dir):
     """
     Converte cada página de um PDF em imagens PNG, aplica pré-processamento para melhorar a qualidade do OCR
@@ -71,24 +77,22 @@ def converter_pdf_para_png_com_preprocessamento(pdf_path, output_dir):
     except Exception as e:
         logging.error(f"Erro ao converter {pdf_path} para imagens PNG: {e}")
 
-
 def json_to_csv(json_file_path, csv_file_path):
     """
-    Converts a JSON file to a CSV DataFrame and saves it to a specified CSV file path.
+    Converte um arquivo JSON para um DataFrame CSV e o salva no caminho especificado.
 
-    Args:
-        json_file_path (str or Path): The path to the JSON file.
-        csv_file_path (str or Path): The path to save the CSV file.
+    :param json_file_path: Caminho para o arquivo JSON.
+    :param csv_file_path: Caminho onde o arquivo CSV será salvo.
     """
     try:
-        # Load the JSON data
+        # Carrega os dados do JSON
         with open(json_file_path, 'r', encoding='utf-8') as f:
             json_data = json.load(f)
         
-        # Convert the JSON data to a DataFrame
+        # Converte os dados JSON para um DataFrame
         df = pd.json_normalize(json_data)
         
-        # Save the DataFrame to a CSV file
+        # Salva o DataFrame em um arquivo CSV
         df.to_csv(csv_file_path, index=False, encoding='utf-8')
         logging.info(f"Successfully converted {json_file_path} to {csv_file_path}")
 
@@ -98,29 +102,28 @@ def json_to_csv(json_file_path, csv_file_path):
 
 def json_to_unified_csv(json_dir, unified_csv_path):
     """
-    Combines multiple JSON files in a directory into a single CSV file.
+    Combina múltiplos arquivos JSON em um diretório em um único arquivo CSV.
 
-    Args:
-        json_dir (str or Path): Directory containing the JSON files.
-        unified_csv_path (str or Path): Path where the unified CSV file will be saved.
+    :param json_dir: Diretório contendo os arquivos JSON.
+    :param unified_csv_path: Caminho onde o arquivo CSV unificado será salvo.
     """
     try:
-        # List to store each DataFrame
+        # Lista para armazenar cada DataFrame
         dataframes = []
 
-        # Iterate through all .json files in the specified directory
+        # Itera por todos os arquivos .json no diretório especificado
         for json_file in Path(json_dir).glob("*.json"):
             with open(json_file, 'r', encoding='utf-8') as f:
                 json_data = json.load(f)
 
-            # Convert the JSON data to a DataFrame
+            # Converte os dados JSON para um DataFrame
             df = pd.json_normalize(json_data)
             dataframes.append(df)
 
-        # Concatenate all DataFrames into a single DataFrame
+        # Concatena todos os DataFrames em um único DataFrame
         unified_df = pd.concat(dataframes, ignore_index=True)
 
-        # Save the unified DataFrame to a CSV file
+        # Salva o DataFrame unificado em um arquivo CSV
         unified_df.to_csv(unified_csv_path, index=False, encoding='utf-8')
         logging.info(f"Unified CSV file created at {unified_csv_path}")
 
