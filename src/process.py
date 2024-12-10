@@ -43,7 +43,7 @@ def process_medical_information(extracted_text):
         postamble=postamble
     ).to_messages()
 
-    chat = ChatOpenAI(model="chatgpt-4o-latest", temperature=0.0)
+    chat = ChatOpenAI(model="gpt-4o-mini", temperature=0.0)
 
     try:
         response = chat.invoke(request)
