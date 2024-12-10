@@ -156,7 +156,6 @@ class ParametrosClinicos(BaseModel):
     fio2_sepse: Optional[float] = Field(description="FiO₂ - Sepse", default=None)
 
     # Outros parâmetros - Infecção e Sepse
-    oliguria_infeccao: bool = Field(description="Oligúria - Infecção")
     oxigenoterapia_infeccao: bool = Field(description="Oxigenoterapia - Infecção")
     drogas_vasoativas_infeccao: bool = Field(description="Drogas vasoativas - Infecção")
     ventilacao_mecanica_infeccao: bool = Field(description="Ventilação mecânica - Infecção")
@@ -279,3 +278,4 @@ class FormDoc(BaseModel):
     escores_sepse: EscoresSepse = Field(description="(ESQUERDA)9. ESCORES DE DIAGNOSTICO E/OU PROGNOSTICO EM PACIEENTES COM SEPSE, CALCULADOS A PARTIR DOS DADOS CLINICOS E LABORATORIAIS NA INTERNAÇÃO (OU PRIMEIRAS 24 HORAS) E NO DIAGNOSTICO DE SEPSE") 
     patiente_data: PatienteData = Field(description="TEMPO DE INTERNAÇÃO EM HOSPITAL E UTI")
     desfechos: Desfechos = Field(description="DESFECHOS")
+    oliguria_infeccao: bool = Field(description="Oligúria - Infecção")
